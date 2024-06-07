@@ -1,0 +1,399 @@
+**# This is the file I will use for the GitPrimagean course from Boot.dev. #**
+
+# Useful Commands
+Let's take a look at the official Git manual. Run the following command in your terminal:
+
+man git
+Copy icon
+Shortcuts for the manual:
+
+q: Quits the manual
+j: One line down
+k: One line up
+d: Half page down
+u: Half page up
+/<term>: Search for "term"
+n: Next search term
+N: Previous search term
+
+------------------------------------------
+
+# PORCELAIN AND PLUMBING
+In Git, commands are divided into high-level ("porcelain") commands and low-level ("plumbing") commands. The porcelain commands are the ones that you will use most often as a developer to interact with your code. Some porcelain commands are:
+
+git status
+git add
+git commit
+git push
+git pull
+git log
+Don't worry about what they do yet, we'll cover them in detail soon. Some examples of plumbing commands are:
+
+git apply
+git commit-tree
+git hash-object
+We'll focus on the high-level commands because that's what you use 99% of the time as a developer, but we'll dip down into the low-level commands occasionally to really understand how Git works.
+
+------------------------------------------------------------------------------
+
+# COMMIT
+After staging a file (git add), we can commit it.
+
+A commit is a snapshot of the repository at a given point in time. It's a way to save the state of the repository, and it's how Git keeps track of changes to the project. A commit comes with a message that describes the changes made in the commit.
+
+Here's how to commit all of your staged files:
+
+git commit -m "your message here"
+Copy icon
+ASSIGNMENT
+Commit the contents.md file with the message A: add contents.md. You wouldn't normally start a commit message with "A:", you'd just write the message, but we're going to use letters to help us easily identify commits in this course.
+Run git status again, and you should see that the file is no longer staged.
+Run and submit the CLI tests from inside the webflyx directory.
+TIP
+If you screw up a commit message, you can change it with the --amend flag. For example:
+
+# Change the Last Commit Message
+git commit --amend -m "A: add contents.md"
+
+-----------------------------------
+
+# Git Log
+Next, run git log again, but this time use the -n and --no-pager options to limit the maximum number of commits shown, and more importantly, to run it without the interactive pager. E.g.:
+
+git --no-pager log -n 10
+Copy icon
+Run and submit the tests.
+
+------------------------
+
+742ae47550048eceeb91822826d4e6bca55fb897 - hash needed to be saved for assignment purposes
+
+--------------------------
+# Git Config
+
+GIT CONFIG
+Git stores author information so that when you're making a commit it can track who made the change. Here's how you might update your global Git configuration (don't do this yet):
+
+git config --add --global user.name "ThePrimeagen"
+git config --add --global user.email "the.primeagen@aol.com"
+
+You can actually store any old data in your Git configuration. Granted, only certain keys are used by Git, but you can store whatever you want.
+
+Set the following useless key/value pairs in your local Git configuration for the Webflyx repository (omit the --global flag to set them locally):
+
+webflyx.ceo: "ThePrimeagen"
+webflyx.cto: "TheLaneagen"
+webflyx.valuation: "mid"
+Git has a command to view the contents of your config:
+
+git config --list --local
+Copy icon
+You can also just view the contents of your local config file directly:
+
+cat .git/config
+
+# GET
+
+GET
+We've used --list to see all the configuration values, but the --get flag is useful for getting a single value.
+
+git config --get <key>
+Copy icon
+Keys are in the format <section>.<keyname>. For example:
+
+user.name
+webflyx.ceo
+
+# Git config locations and overriding
+
+# LOCATIONS
+There are several locations where Git can be configured. From more general to more specific, they are:
+
+system: /etc/gitconfig, a file that configures Git for all users on the system
+global: ~/.gitconfig, a file that configures Git for all projects of a user
+local: .git/config, a file that configures Git for a specific project
+worktree: .git/config.worktree, a file that configures Git for part of a project
+In my experience, 90% of the time you will be using --global to set things like your username and email. The other 9% of the time you will be using --local to set project-specific configurations. The last 1% of the time you might need to futz with system and worktree configurations, but it's extremely rare.
+
+OVERRIDING
+If you set a configuration in a more specific location, it will override the same configuration in a more general location. For example, if you set user.name in the local configuration, it will override the user.name set in the global configuration.
+
+# New Branch
+
+TWO WAYS TO CREATE A BRANCH
+git branch my_new_branch
+Copy icon
+This creates a new branch called my_new_branch. The thing is, I rarely use this command because usually I want to create a branch and switch to it immediately. So I use this command instead:
+
+git switch -c my_new_branch
+Copy icon
+The switch command allows you to switch branches, and the -c flag tells Git to create a new branch if it doesn't already exist.
+
+When you create a new branch, it uses the current commit you are on as the branch base.
+
+You can also switch branches with "git switch "branchname" - the older command for this it git checkout "branchname", but it is suggested we use git switch.
+
+# Log Flags
+
+LOG FLAGS
+As you know, git log shows you the history of commits in your repo. There are a few flags I like to use from time to time to make the output easier to read.
+
+The first is --decorate. It can be one of:
+
+short (the default)
+full (shows the full ref name)
+no (no decoration)
+Run git log --decorate=full. You should see that instead of just using your branch name, it will show the full ref name. A ref is just a pointer to a commit. All branches are refs, but not all refs are branches.
+
+Run git log --decorate=no. You should see that the branch names are no longer shown at all.
+
+The second is --oneline. This flag will show you a more compact view of the log. I use this one all the time, it just makes it so much easier to see what's going on.
+
+git log --oneline
+
+Useful command: git log --oneline --decorate --graph --parents
+
+# Merge Log
+
+*   89629a9 d234104 b8dfd64 (HEAD -> main) F: Merge branch 'add_classics'
+|\
+| * b8dfd64 fba0999 (tag: 5.8, add_classics) D: add classics
+* | d234104 fba0999 (tag: 6.1) E: update contents
+|/
+* fba0999 1381199 (tag: 3.8, origin/master, origin/main, master) C: add quotes
+* 1381199 a21228f (tag: 3.7) B: add titles.md
+* a21228f A: add contents.md
+Copy icon
+Each asterisk * represents a commit in the repository. There are multiple commit hashes on each line because the --parents flag logs the parent hash(es) as well.
+
+The first line, with these three hashes: 89629a9 d234104 b8dfd64 is our recent merge commit. The first hash, 89629a9 is the merge commit's hash, and the other two are the parent commits.
+The next section is a visual representation of the branch structure. It shows the commits on the add_classics branch and the main branch before the merge. Notice that they both share a common parent.
+The next three lines are just "normal" commits, each pointing to their parent.
+The last line is the initial commit and therefore has no parent.
+
+# Fucking confusing
+
+CLARIFICATION:
+When performing a rebase, the branch you're currently on (e.g., update_dune) "absorbs" the history of the branch you're rebasing onto (e.g., main). Essentially, it rewrites update_dune to look as if it started from the tip of main.
+
+TRANSLATION:
+"Rebase your changes onto main" = While on update_dune, integrate main's history beneath update_dune's commits.
+Running git rebase main while on update_dune gives you a new commit history where update_dune's commits are placed on top of main's commits.
+FINAL THOUGHTS:
+To reiterate, in your case:
+
+You should be on update_dune.
+Run git rebase main.
+
+# Warning
+
+WARNING
+You should never rebase a public branch (like main) onto anything else. Other developers have it checked out, and if you change its history, you'll cause a lot of problems for them.
+
+However, with your own branch, you can rebase onto other branches (including a public branch like main) as much as you want.
+
+# Git Reset
+
+GIT RESET
+The git reset command can be used to reset any changes in the index (staged but not committed changes) and the worktree (unstaged and not committed changes).
+
+git reset --hard
+
+# DANGER
+
+DANGER
+I want to stress how dangerous this command can be. When you deleted the file, because it was tracked in Git, it was trivially easy to recover. However, if you have some changes that you do want to keep, running git reset --hard will delete them for good.
+
+Always be careful when using git reset --hard. It's a powerful tool, but it's also a dangerous one.
+
+RESET TO A SPECIFIC COMMIT
+If you want to reset back to a specific commit, you can use the git reset --hard command and provide a commit hash. For example:
+
+git reset --hard a1b2c3d
+Copy icon
+This will reset your working directory and index to the state of that commit, and all the changes made after that commit are lost forever.
+
+Again, be super careful with this. In part 2 of this course, we'll cover more advanced (read: safer) ways to undo changes.
+
+# Adding a Remote
+
+ADDING A REMOTE
+In git, another repo is called a "remote." The standard convention is that when you're treating the remote as the "authoritative source of truth" (such as GitHub) you would name it the "origin".
+
+By "authoritative source of truth" we mean that it's the one you and your team treat as the "true" repo. It's the one that contains the most up-to-date version of the accepted code.
+
+COMMAND SYNTAX
+git remote add <name> <uri>
+
+# Fetch
+
+FETCH
+Adding a remote to our Git repo does not mean that we automagically have all the contents of the remote. First, we need to fetch the contents.
+
+COMMAND
+git fetch
+Copy icon
+This downloads copies of all the contents of the .git/objects directory (and other book-keeping information) from the remote repository into your current one.
+
+# Log Remote
+
+LOG REMOTE
+The git log command isn't only useful for your local repo. You can log the commits of a remote repo as well!
+
+git log remote/branch
+Copy icon
+For example, if you wanted to see the commits of a branch named primeagen from a remote named origin you would run:
+
+git log origin/primeagen
+
+# Not Fetched
+
+NOT FETCHED
+Just because we fetched all of the metadata from the remote webflyx repo doesn't mean we have all of the files.
+
+ASSIGNMENT
+To demonstrate this, run git log inside the webflyx-local repo. You should see that you don't have any commits.
+
+Run and submit the CLI tests from inside the new webflyx-local directory.
+
+# Log Remote
+
+LOG REMOTE
+The git log command isn't only useful for your local repo. You can log the commits of a remote repo as well!
+
+git log remote/branch
+Copy icon
+For example, if you wanted to see the commits of a branch named primeagen from a remote named origin you would run:
+
+git log origin/primeagen
+
+# Merge Syntax
+
+MERGE
+Just as we merged branches within a single local repo, we can also merge branches between local and remote repos.
+
+SYNTAX
+git merge remote/branch
+Copy icon
+For example, if you wanted to merge the primeagen branch of the remote origin into your local main branch, you would run this inside the local repo while on the main branch:
+
+git merge origin/primeagen
+
+# Github Repo
+
+GITHUB REPO
+Just like we created a webflyx-local repo and used webflyx as a remote, GitHub makes it easy to create "remotes" that are hosted on their site.
+
+ASSIGNMENT
+Create a new repository on GitHub called webflyx. Leave it completely blank, and make sure it's public (for now, you can always change it later).
+Authenticate your local Git configuration with your GitHub account. I recommend installing the GitHub CLI. One quick and easy installation method is to use Webi by simply running:
+curl -sS https://webi.sh/gh | sh
+Copy icon
+Then make sure you're logged in with:
+
+gh auth login
+Copy icon
+Navigate back into your webflyx repo locally, it's going to be our "local" repo, you can forget about or delete webflyx-local if you want.
+Add a remote to your webflyx repo that points to the webflyx-remote repo you just created. That command should look something like this:
+git remote add origin https://github.com/your-username/webflyx.git
+Copy icon
+Be sure to replace your-username with your actual GitHub username!
+
+Run git ls-remote to make sure the remote was added correctly.
+
+# Git Push
+
+GIT PUSH
+The git push command pushes (sends) local changes to any "remote" - in our case, GitHub. For example, to push our local main branch's commits to the remote origin's main branch we would run:
+
+git push origin main
+Copy icon
+You need to be authenticated with the remote to push changes, which you should have done in the last lesson.
+
+ALTERNATIVE OPTIONS
+You can also push a local branch to a remote with a different name:
+
+git push origin <localbranch>:<remotebranch>
+Copy icon
+It's less common to do this, but nice to know.
+
+You can also delete a remote branch by pushing an empty branch to it:
+
+git push origin :<remotebranch>
+
+# GIT CLONE
+Let's clone down the GitHub repo onto your machine and open it in your editor.
+
+By creating a project on GitHub first and cloning it down, the remote connection between your local project and GitHub will be configured automatically. If you start your project on your local machine and push it up later, there are a few more steps involved. That's why I prefer git clone to git init + git remote add origin.
+
+# WORKSPACE STRUCTURE
+If you're following my workspace setup, do the following (otherwise skip to "cloning bookbot"):
+
+Navigate to your workspace root
+Make sure you're in your workspace directory. If you're not, you can run "change directory" in your terminal:
+
+cd ~/workspace
+Copy icon
+Create and navigate into a directory called github.com. This is where all GitHub projects will live:
+mkdir github.com
+cd github.com
+Copy icon
+Create and navigate into a directory that will hold all the projects owned by your GitHub username. Replace USERNAME with your GitHub username:
+mkdir USERNAME
+cd USERNAME
+Copy icon
+All of your personal projects on GitHub will now live here, at ~/workspace/github.com/username. I like to structure my workspace this way because it makes it easy to find and manage all my projects, and it means I'll never have conflicting project names (because it mirrors the remote URL structure).
+
+# CLONING BOOKBOT
+Clone your bookbot repo by running this command inside your USERNAME directory and replacing USERNAME with your GitHub username:
+
+git clone https://github.com/USERNAME/bookbot
+Copy icon
+If all goes well, you'll now have a new bookbot directory in your current working directory. You can check by running the "list" command:
+
+ls
+Copy icon
+If you see "bookbot", you're all set!
+
+# RE-OPEN VS CODE
+VS Code's tooling works best if you open VS Code to the root of the repository you're working on. In the VS Code menu, use file -> open folder then navigate to and open your "bookbot" directory (which is in ~/workspace/github.com/USERNAME/bookbot). If all goes well, you should see a README.md file in your file explorer on the left.
+
+Run and submit the CLI tests from within the root of the bookbot directory.
+
+# BOOKBOT - READ FILE
+Now that you've got your machine all configured, let's build "bookbot"! Bookbot is a simple command-line program that reads text from a file and generates a report about the text.
+
+DOWNLOAD "FRANKENSTEIN"
+The "Frankenstein" book by Mary Shelley is in the public domain, so we can use it for our project.
+
+You can find the full text here.
+
+Create a directory in your bookbot project called books. Right-click the text on the webpage and choose Select All, then copy and paste it into a text editor. Save it as frankenstein.txt in the books directory.
+
+USE A .GITIGNORE FILE
+We don't want to save the entire book in our Git repository. Generally speaking, Git is for code, not for data.
+
+Create a .gitignore file in the root of your project and add this text to it:
+
+books/
+Copy icon
+You should see the filename turn dark gray in your VS Code file explorer. Now, whenever you run git add . from the root of your project, all the files in the books directory will be automatically ignored!
+
+READ THE BOOK
+Change main.py so that instead of printing "hello world", it reads the contents of the "frankenstein.txt" and prints it all to the console.
+
+HINTS
+Use a with block to open a file:
+
+with open(path_to_file) as f:
+    # ...
+Copy icon
+Keep in mind that path_to_file needs to be relative to wherever you're running the program from. If you're running the program from the root of your project, you would use books/frankenstein.txt. The path to the file is a string so it needs to be in quotes!
+
+Once you have an open file, read the contents into a string within the with block:
+
+file_contents = f.read()
+Copy icon
+Use a main function to wrap the logic and call main() at the bottom of your file to execute your program.
+
+When you're satisfied it's working, you can move on.
