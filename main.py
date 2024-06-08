@@ -20,7 +20,7 @@ def main():
     # Call count_each_char to count how many times each character is found in the book.
     character_counts = count_each_char(text)
 
-    # Conver this dictionary into a LIST of dictionaries, sorted by letters
+    # Convert this dictionary into a LIST of dictionaries, sorted by letters
     char_count_list = [{'character': key, 'num': value} for key, value in character_counts.items()]
 
     # Sort the characters
@@ -30,11 +30,14 @@ def main():
     for item in char_count_list:
         print(f"The '{item['character']}' character was found {item['num']} times")
 
+    # Add a blank line for separation.
     print()
 
+    # Call find_word_beatiful into a variable to count how many times the word beautiful appears in the book!
     beautiful_counter = find_word_beautiful(text)
-    print(f"The word beautiful appears {beautiful_counter} times in the book!")
+    print(f"The word 'beautiful' appears {beautiful_counter} times in the book!")
 
+    # Add a blank line for separation.
     print()
 
     print("---- End of report! ----")
