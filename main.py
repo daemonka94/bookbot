@@ -1,4 +1,7 @@
+import string
+
 def main():
+    
     book_path = "books/frankenstein.txt"
     text = get_book_text(book_path)
 
@@ -29,6 +32,11 @@ def main():
 
     print()
 
+    beautiful_counter = find_word_beautiful(text)
+    print(f"The word beautiful appears {beautiful_counter} times in the book!")
+
+    print()
+
     print("---- End of report! ----")
 
 def get_num_words(text):
@@ -54,5 +62,19 @@ def count_each_char(text):
 
 def sort_on(char_count):
     return char_count["num"]
+
+
+def find_word_beautiful(text):
+    beautiful_count = 0
+    lowered_text = text.lower()
+    words = lowered_text.split()
+    for word in words:
+        cleaned_word = word.strip(string.punctuation)
+        if cleaned_word == "beautiful":
+            beautiful_count +=1
+    return beautiful_count
+
+
+    
 
 main()
