@@ -397,3 +397,32 @@ Copy icon
 Use a main function to wrap the logic and call main() at the bottom of your file to execute your program.
 
 When you're satisfied it's working, you can move on.
+
+# PATTERNS
+It would be rough if .gitignore files only accepted exact filepath section names. Luckily, they don't!
+
+Let's go over some of the most common patterns.
+
+WILDCARDS
+The * character matches any number of characters except for a slash (/). For example, to ignore all .txt files, you could use the following pattern:
+
+*.txt
+
+# ROOTED PATTERNS
+Patterns starting with a / are anchored to the directory containing the .gitignore file. For example, this would ignore a main.py in the root directory, but not in any subdirectories:
+
+/main.py
+
+# NEGATION
+You can negate a pattern by prefixing it with an exclamation mark (!). For example, to ignore all .txt files except for important.txt, you could use the following pattern:
+
+*.txt
+!important.txt
+Copy icon
+COMMENTS
+You can add comments to your .gitignore file by starting a line with a #. For example:
+
+# Ignore all .txt files
+*.txt
+Copy icon
+You can read more about the patterns that are available in the official documentation if you'd like.
