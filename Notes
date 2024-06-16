@@ -426,3 +426,62 @@ You can add comments to your .gitignore file by starting a line with a #. For ex
 *.txt
 Copy icon
 You can read more about the patterns that are available in the official documentation if you'd like.
+
+# ENCAPSULATION
+Encapsulation is the practice of hiding complexity inside a "black box" so that it's easier to focus on the problem at hand.
+
+The most basic example of encapsulation is a function. The caller of a function doesn't need to worry too much about what happens inside, they just need to understand the inputs and outputs.
+
+acceleration = calc_acceleration(initial_speed, final_speed, time)
+
+To use the calc_acceleration function, we don't need to think about every individual line of code inside the function. We just need to know that if we give it the inputs:
+
+initial_speed
+final_speed
+time
+Then it will give us the correct acceleration as an output.
+
+# PUBLIC AND PRIVATE
+By default, all properties and methods in a class are public. That means that you can access them with the . operator:
+
+wall.height = 10
+print(wall.height)
+* 10
+
+Private data members are how we encapsulate logic and data within a class. To make a property or method private, you just need to prefix it with two underscores.
+
+class Wall:
+    def __init__(self, armor, magic_resistance):
+        self.__armor = armor
+        self.__magic_resistance = magic_resistance
+
+    def get_defense(self):
+        return self.__armor + self.__magic_resistance
+
+front_wall = Wall(10, 20)
+
+* This results in an error
+print(front_wall.__armor)
+
+* This works
+print(front_wall.get_defense())
+* 30
+
+We do this because, in this example, armor and magic_resistance are implementation details. After creating a Wall, they don't matter anymore. Now the game developers can just call get_defense and not worry about how it's calculated under the hood.
+
+# ENCAPSULATION IN PYTHON
+Python is a dynamic language, and that makes it difficult for the interpreter to enforce some of the safeguards that languages like Go do. That's why encapsulation in Python is achieved mostly by convention rather than by force.
+
+Prefixing methods and properties with a double underscore is a strong suggestion to the users of your class that they shouldn't be touching that stuff. If a developer wants to break convention, there are ways to get around the double underscore rule.
+
+https://stackoverflow.com/questions/3385317/private-variables-and-methods-in-python
+
+
+class Wall:
+    def __init__(self, height):
+        # the double underscore make this a private property
+        # but it's not strictly enforced, there are hacks to get around it
+        self.__height = height
+
+    def get_height(self):
+        return self.__height
